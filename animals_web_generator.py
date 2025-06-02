@@ -1,12 +1,4 @@
-import requests
-
-def load_data(animal_name):
-    """Loads data from API for the specified animal"""
-    url = f"https://api.api-ninjas.com/v1/animals?name={animal_name}"
-    headers = {'X-Api-Key': 'hnNcTlcp3tb9JCJ1LUds2A==dIgyWDQFfYNycVcO'}
-    response = requests.get(url, headers=headers)
-    return response.json()
-
+import data_fetcher
 
 def serialize_animal(animal_obj):
     """Serializes an animal object into HTML"""
@@ -46,7 +38,7 @@ def main():
         print("You must enter a name.")
         return
 
-    animals_data = load_data(animal_name)
+    animals_data = data_fetcher.fetch_data(animal_name)
     generate_html(animals_data, "animals_template.html", "animals.html", animal_name)
     print("Website was successfully generated to the file animals.html.")
 
