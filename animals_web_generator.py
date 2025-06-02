@@ -24,9 +24,12 @@ def serialize_animal(animal_obj):
     return output
 
 
-def generate_html(animal_data, template_path, output_path):
-    """Creates HTML document with template and animal data"""
-    serialized_animals = ''.join(serialize_animal(animal) for animal in animal_data)
+def generate_html(animal_data, template_path, output_path, animal_name):
+    """Creates HTML document with either animal data or an error message"""
+    if not animal_data:
+        serialized_animals = f'<h2>The animal "{animal_name}" doesn\'t exist.</h2>'
+    else:
+        serialized_animals = ''.join(serialize_animal(animal) for animal in animal_data)
 
     with open(template_path, "r") as template:
         html_content = template.read()
@@ -39,9 +42,14 @@ def generate_html(animal_data, template_path, output_path):
 
 def main():
     animal_name = input("Enter a name of an animal: ").strip()
+    if not animal_name:
+        print("You must enter a name.")
+        return
+
     animals_data = load_data(animal_name)
-    generate_html(animals_data, "animals_template.html", "animals.html")
+    generate_html(animals_data, "animals_template.html", "animals.html", animal_name)
     print("Website was successfully generated to the file animals.html.")
+
 
 if __name__ == "__main__":
     main()
