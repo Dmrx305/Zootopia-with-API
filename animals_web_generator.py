@@ -1,31 +1,31 @@
 import requests
 
-def load_data():
-    """ Loads data from api"""
-    url = "https://api.api-ninjas.com/v1/animals?name=fox"
+def load_data(animal_name):
+    """Loads data from API for the specified animal"""
+    url = f"https://api.api-ninjas.com/v1/animals?name={animal_name}"
     headers = {'X-Api-Key': 'hnNcTlcp3tb9JCJ1LUds2A==dIgyWDQFfYNycVcO'}
     response = requests.get(url, headers=headers)
     return response.json()
 
 
 def serialize_animal(animal_obj):
-    """ Serializes a list of animals """
+    """Serializes an animal object into HTML"""
     output = ""
     output += '<li class="cards__item">'
-    output += '<div class="card__title">'f"{animal_obj['name']}</div>"
+    output += f'<div class="card__title">{animal_obj["name"]}</div>'
     output += '<p class="card__text">'
-    output += '<strong>Scientific Name: </strong>'f"{animal_obj["taxonomy"]['scientific_name']}<br/>\n"
-    output += '<strong>Diet: </strong>'f"{animal_obj["characteristics"]["diet"]}<br/>\n"
-    output += '<strong>Location: </strong>'f"{animal_obj["locations"][0]}<br/>\n"
+    output += f'<strong>Scientific Name: </strong>{animal_obj["taxonomy"]["scientific_name"]}<br/>\n'
+    output += f'<strong>Diet: </strong>{animal_obj["characteristics"]["diet"]}<br/>\n'
+    output += f'<strong>Location: </strong>{animal_obj["locations"][0]}<br/>\n'
     if "type" in animal_obj["characteristics"]:
-        output += '<strong>Type: </strong>'f"{animal_obj["characteristics"]["type"]}<br/>\n"
-        output += '</p>'
-    output += "</li>"
+        output += f'<strong>Type: </strong>{animal_obj["characteristics"]["type"]}<br/>\n'
+    output += '</p>'
+    output += '</li>'
     return output
 
 
 def generate_html(animal_data, template_path, output_path):
-    """Creates html document wiith template and animal data"""
+    """Creates HTML document with template and animal data"""
     serialized_animals = ''.join(serialize_animal(animal) for animal in animal_data)
 
     with open(template_path, "r") as template:
@@ -38,9 +38,10 @@ def generate_html(animal_data, template_path, output_path):
 
 
 def main():
-    animals_data = load_data()
+    animal_name = input("Enter a name of an animal: ").strip()
+    animals_data = load_data(animal_name)
     generate_html(animals_data, "animals_template.html", "animals.html")
-
+    print("Website was successfully generated to the file animals.html.")
 
 if __name__ == "__main__":
     main()
